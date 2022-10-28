@@ -2,10 +2,10 @@ package api
 
 import (
 	"fmt"
-	"runtime"
 
 	log "github.com/sirupsen/logrus"
 
+	"github.com/awlsring/action-runner/api/auth"
 	"github.com/awlsring/action-runner/data"
 	"github.com/awlsring/action-runner/runner"
 	"github.com/gin-gonic/gin"
@@ -23,16 +23,25 @@ func Start(c Config, a *map[string]string, r *runner.AnsibleRunner, d *data.Exec
 	log.Debug(*a)
 	
 	q := make(chan *runner.RunRequest)
+	log.Debug("Starting background runner")
 	go r.BackgroundRunner(q)
 	
 	log.Debug("Registering routes")
-	router.POST("/action/:actionName", runAction(a, q, d))
-	router.GET("/action", listActions(a))
-	router.GET("/action/:actionName", getAction(a, r.Config.PlaybookDir))
-	router.GET("/execution/:executionId", getExecution(d))
-	router.GET("/execution/:executionId/detailed", getDetailedExecution(d))
-    router.GET("/os", func(c *gin.Context) {
-        c.String(200, runtime.GOOS)
-    })
+
+	action := router.Group("/action")
+	action.Use(auth.ApiKeyMiddleware())
+	execution := router.Group("/execution")
+	execution.Use(auth.ApiKeyMiddleware())
+
+	action.POST("/:actionName", runAction(a, q, d))
+	action.GET("", listActions(a))
+	action.GET("/:actionName", getAction(a, r.Config.PlaybookDir))
+	execution.GET("/:executionId", getExecution(d))
+	execution.GET("/:executionId/detailed", getDetailedExecution(d))
+    router.GET("/ping", func(c *gin.Context) {
+        c.JSON(200, gin.H{
+			"message": "healthy",
+		})
+	})
     router.Run(fmt.Sprintf(":%v", c.Port))
 }

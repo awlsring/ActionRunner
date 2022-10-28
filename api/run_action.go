@@ -3,11 +3,13 @@ package api
 import (
 	"errors"
 	"fmt"
+	"net"
 	"net/http"
 	"time"
 
 	log "github.com/sirupsen/logrus"
 
+	"github.com/awlsring/action-runner/api/exceptions"
 	"github.com/awlsring/action-runner/data"
 	"github.com/awlsring/action-runner/inventory"
 	"github.com/awlsring/action-runner/runner"
@@ -44,15 +46,17 @@ func runAction(a *map[string]string, ch chan *runner.RunRequest, s *data.Executi
 		actionName := c.Param("actionName")
 		action, request, err := validateRunActionRequest(a, c)
 		if err != nil {
-			log.Println(err)
 			return 
 		}
+		req, _ := request.MarshalJSON()
+		log.Debug("Request: ", string(req))
 		log.Debug("Request validated")
 
 		log.Debug("Getting inventory")
 		h, err := machinesToInventory(request.Machines)
 		if err != nil {
 			log.Println(err)
+			exceptions.InternalErrorResponse(c, "Failed to build inventory")
 			return
 		}
 		targets := []string{}
@@ -99,22 +103,32 @@ func validateRunActionRequest(a *map[string]string, c *gin.Context) (string, *mo
 	if file, ok := ac[actionName]; ok {
 		actionFile = file
 	} else {
-		resp := model.InvalidInputErrorResponseContent{
-			Message: "Specified action does not exist",
-		}
-		c.IndentedJSON(http.StatusBadRequest, resp)
+		log.Errorf("Action not found: %v", actionName)
+		exceptions.ActionNotFoundResponse(c, fmt.Sprintf("Action %v not found", actionName))
 		return "", nil, errors.New("")
 	}
 	
 	if err := c.BindJSON(&request); err != nil {
-		fmt.Println(err)
-	}
-	if request.Machines == nil || len(request.Machines) == 0{
-		resp := model.InvalidInputErrorResponseContent{
-			Message: "At least one machine must be passed",
-		}
-		c.IndentedJSON(http.StatusBadRequest, resp)
+		log.Errorf("Invalid input: %v", err)
+		exceptions.InvalidInputResponse(c, fmt.Sprintf("Invalid input: %v", err))
 		return "", nil, errors.New("")
 	}
+	if request.Machines == nil || len(request.Machines) == 0{
+		log.Error("No machines provided")
+		exceptions.InvalidInputResponse(c, "No machines specified")
+		return "", nil, errors.New("")
+	}
+
+	for _, machine := range request.Machines {
+		if !validIPAddress(machine.Ip){
+			log.Errorf("Invalid IP address: %v", machine.Ip)
+			exceptions.InvalidInputResponse(c, fmt.Sprintf("Invalid IP address: '%v'", machine.Ip))
+			return "", nil, errors.New("")
+		}
+	}
 	return actionFile, request, nil
+}
+
+func validIPAddress(ip string) bool {
+    return net.ParseIP(ip) != nil
 }

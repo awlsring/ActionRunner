@@ -101,7 +101,7 @@ func closeExecution(
 func (a *AnsibleRunner) executeAction(request *RunRequest) {
 	inv, err := a.CreateEphemeralInventory(request.Hosts, request.Execution.Id)
 	if err != nil {
-		log.Println(err)
+		log.Error(err)
 		return
 	}
 

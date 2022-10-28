@@ -5,6 +5,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/awlsring/action-runner/api/exceptions"
 	model "github.com/awlsring/dws-action-runner"
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
@@ -37,10 +38,7 @@ func getAction(a *map[string]string, path string) gin.HandlerFunc {
 		actionName := c.Param("actionName")
 		action, ok := (*a)[actionName]
 		if !ok {
-			invalidInput := model.InvalidInputErrorResponseContent{
-				Message: fmt.Sprintf("Action %v not found", actionName),
-			}
-			c.JSON(404, invalidInput)
+			exceptions.ActionNotFoundResponse(c, fmt.Sprintf("Action %v not found", actionName))
 			return
 		}
 

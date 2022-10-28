@@ -1,10 +1,12 @@
 package api
 
 import (
+	"fmt"
 	"net/http"
 
 	log "github.com/sirupsen/logrus"
 
+	"github.com/awlsring/action-runner/api/exceptions"
 	"github.com/awlsring/action-runner/data"
 	model "github.com/awlsring/dws-action-runner"
 	"github.com/gin-gonic/gin"
@@ -17,10 +19,7 @@ func getExecution(s *data.ExecutionRespository) gin.HandlerFunc {
 		ex, err := s.ExecutionDao.Get(exId)
 		if err != nil {
 			log.Error(err)
-			resp := model.InvalidInputErrorResponseContent{
-				Message: "Specified execution does not exist",
-			}
-			c.JSON(http.StatusBadRequest, resp)
+			exceptions.ExecutionNotFoundResponse(c, fmt.Sprintf("Execution %s does not exist", exId))
 			return
 		}
 
@@ -41,10 +40,7 @@ func getDetailedExecution(s *data.ExecutionRespository) gin.HandlerFunc {
 		ex, err := s.ExecutionDao.GetDetailed(exId)
 		if err != nil {
 			log.Println(err)
-			resp := model.InvalidInputErrorResponseContent{
-				Message: "Specified execution does not exist",
-			}
-			c.JSON(http.StatusBadRequest, resp)
+			exceptions.ExecutionNotFoundResponse(c, fmt.Sprintf("Execution %s does not exist", exId))
 			return
 		}
 
