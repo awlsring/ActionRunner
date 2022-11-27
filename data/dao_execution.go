@@ -1,7 +1,7 @@
 package data
 
 import (
-	model "github.com/awlsring/dws-action-runner"
+	model "github.com/awlsring/action-runner-model"
 )
 
 type ExecutionDao interface {

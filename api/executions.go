@@ -6,9 +6,9 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
+	model "github.com/awlsring/action-runner-model"
 	"github.com/awlsring/action-runner/api/exceptions"
 	"github.com/awlsring/action-runner/data"
-	model "github.com/awlsring/dws-action-runner"
 	"github.com/gin-gonic/gin"
 )
 

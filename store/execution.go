@@ -11,8 +11,8 @@ import (
 	"github.com/google/uuid"
 	log "github.com/sirupsen/logrus"
 
+	model "github.com/awlsring/action-runner-model"
 	"github.com/awlsring/action-runner/execution"
-	model "github.com/awlsring/dws-action-runner"
 	"github.com/awlsring/surreal-db-client/surreal"
 )
 

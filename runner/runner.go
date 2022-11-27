@@ -14,10 +14,10 @@ import (
 	"github.com/apenella/go-ansible/pkg/options"
 	"github.com/apenella/go-ansible/pkg/playbook"
 	"github.com/apenella/go-ansible/pkg/stdoutcallback/results"
+	model "github.com/awlsring/action-runner-model"
 	"github.com/awlsring/action-runner/data"
 	"github.com/awlsring/action-runner/inventory"
 	"github.com/awlsring/action-runner/store"
-	model "github.com/awlsring/dws-action-runner"
 	"gopkg.in/yaml.v2"
 )
 
@@ -25,6 +25,7 @@ type Config struct {
 	User string `mapstructure:"ansibleUser"`
 	ConnectionType string `mapstructure:"connectionType"`
 	PlaybookDir string `mapstructure:"playbookSource"`
+	Key string `mapstructure:"privateKeyFile"`
 }
 
 type AnsibleRunner struct {
@@ -36,6 +37,7 @@ type AnsibleRunner struct {
 
 func New(c Config, d *data.ExecutionRespository) (*AnsibleRunner, error) {
 	connectionOptions := &options.AnsibleConnectionOptions{
+		PrivateKey: c.Key,
 		Connection: c.ConnectionType,
 		User:       c.User,
 	}

@@ -3,7 +3,7 @@ module github.com/awlsring/action-runner
 go 1.19
 
 require (
-	github.com/awlsring/dws-action-runner v0.0.0
+	github.com/awlsring/action-runner-model v0.0.0
 	github.com/google/uuid v1.3.0
 	github.com/sirupsen/logrus v1.9.0
 	github.com/spf13/viper v1.13.0
@@ -62,6 +62,6 @@ require (
 )
 
 replace (
-	github.com/awlsring/dws-action-runner => /Users/awlsring/Code/DWSRepos/armModel
-	github.com/awlsring/surreal-db-client => /Users/awlsring/Code/SurrealDBClient
+	github.com/awlsring/action-runner-model => ./gen/ActionRunnerGoClient
+	github.com/awlsring/surreal-db-client => ./gen/SurrealDBClient
 )

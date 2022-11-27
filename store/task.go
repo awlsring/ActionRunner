@@ -5,7 +5,7 @@ import (
 	"strings"
 	"time"
 
-	model "github.com/awlsring/dws-action-runner"
+	model "github.com/awlsring/action-runner-model"
 	"github.com/awlsring/surreal-db-client/surreal"
 )
 

@@ -3,7 +3,7 @@ package exceptions
 import (
 	"fmt"
 
-	model "github.com/awlsring/dws-action-runner"
+	model "github.com/awlsring/action-runner-model"
 	"github.com/gin-gonic/gin"
 )
 

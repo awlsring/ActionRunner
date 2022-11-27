@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/apenella/go-ansible/pkg/stdoutcallback/results"
-	model "github.com/awlsring/dws-action-runner"
+	model "github.com/awlsring/action-runner-model"
 	"github.com/google/uuid"
 )
 

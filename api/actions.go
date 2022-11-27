@@ -5,8 +5,8 @@ import (
 	"os"
 	"strings"
 
+	model "github.com/awlsring/action-runner-model"
 	"github.com/awlsring/action-runner/api/exceptions"
-	model "github.com/awlsring/dws-action-runner"
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
 	"gopkg.in/yaml.v3"

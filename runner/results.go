@@ -7,8 +7,8 @@ import (
 	"time"
 
 	"github.com/apenella/go-ansible/pkg/stdoutcallback/results"
+	model "github.com/awlsring/action-runner-model"
 	"github.com/awlsring/action-runner/data"
-	model "github.com/awlsring/dws-action-runner"
 )
 
 var AnsibleTimestamp = "2006-01-02T15:04:05.000000Z"
