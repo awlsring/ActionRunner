@@ -1,11 +1,11 @@
 version: '3.1'
 services:
   action-runner:
-    image: awlsring/action-runner:latest
+    image: action-runner
     container_name: action-runner
     volumes:
-      - /action-runner/app:/app
-      - /action-runner/playbooks:/playbooks
+      - ~/tmp/action-runner/app:/app
+      - ~/tmp/action-runner/ActionRunnerPlaybooks:/playbooks
     ports:
       - 7032:7032
     restart: unless-stopped
