@@ -19,15 +19,18 @@ jobs:
           node-version: '14'
       
       - 
+        name: Setup Go 1.19
+        uses: actions/setup-go@v3
+        with:
+          go-version: '^1.19'
+
+      - 
         name: Install openapi-generator
         run: npm install @openapitools/openapi-generator-cli -g
       
       - 
         name: Codegen
-        run: |
-          shopt -s expand_aliases
-          alias openapi-generator="openapi-generator-cli"
-          make gen
+        run: make gen
       
       -
         name: Set up QEMU
