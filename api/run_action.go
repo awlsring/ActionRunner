@@ -20,20 +20,33 @@ import (
 func machinesToInventory(m []model.Machine) ([]*inventory.Host, error) {
 	hosts := []*inventory.Host{}
 	for _, machine := range m {
-		if !machine.HasAnsiblePort() {
-			port := float32(22)
-			machine.AnsiblePort = &port
-		}
-
+		
 		if !machine.HasId() {
 			machine.Id = &machine.Ip
 		}
-
+		
 		h := &inventory.Host{
-			Port: int(machine.GetAnsiblePort()),
+			Port: 22,
 			IpAddress: machine.Ip,
 			ID: *machine.Id,
 		}
+
+		if machine.HasAnsiblePort() {
+			h.Port = int(*machine.AnsiblePort)
+		}
+
+		if machine.HasAnsibleUser() {
+			h.User = *machine.AnsibleUser
+		}
+
+		if machine.HasAnsiblePassword() {
+			h.Password = *machine.AnsiblePassword
+		}
+
+		if machine.HasAnsibleSudoPassword() {
+			h.SudoPassword = *machine.AnsibleSudoPassword
+		}
+
 		hosts = append(hosts, h)
 	}
 

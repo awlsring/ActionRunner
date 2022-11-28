@@ -5,5 +5,8 @@ type Host struct {
 	IpAddress string
 	Name string
 	OsFamily string
+	User string
+	Password string
+	SudoPassword string
 	ID string
 }

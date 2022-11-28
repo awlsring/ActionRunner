@@ -40,6 +40,7 @@ func New(c Config, d *data.ExecutionRespository) (*AnsibleRunner, error) {
 		PrivateKey: c.Key,
 		Connection: c.ConnectionType,
 		User:       c.User,
+		AskPass: false,
 	}
 	
 	q := make(chan *model.RunActionRequestContent)
@@ -168,11 +169,13 @@ func (a *AnsibleRunner) executeAction(request *RunRequest) {
 func (a AnsibleRunner) CreateEphemeralInventory(hosts []*inventory.Host, executionId string) (string, error) {
 	hostMap := make(map[string]inventory.HostOptions)
 	for _, host := range hosts {
-		// vvv Probably make a function to regex entries from x- to name instead of doing in runner
 		hostMap[store.SurrealIdFromMachineId(host.ID)] = inventory.HostOptions{
 			AnsiblePort: host.Port,
 			AsibleHost: host.IpAddress,
 			AnsibleOsFamily: host.OsFamily,
+			AnisbleUser: host.User,
+			AnsiblePassword: host.Password,
+			AnsibleSudoPassword: host.SudoPassword,
 		}
 	}
 	
@@ -187,7 +190,14 @@ func (a AnsibleRunner) CreateEphemeralInventory(hosts []*inventory.Host, executi
         return "", err
     }
 
-	fileName := fmt.Sprintf("%v.yaml", executionId)
+	wd, err := os.Getwd()
+	if err != nil {
+		return "", err
+	}
+	log.Debugf("Current working directory: %v", wd)
+
+	log.Debug("Creating inventory")
+	fileName := fmt.Sprintf("%v/%v.yaml", wd, executionId)
     err = os.WriteFile(fileName, yamlData, 0644)
     if err != nil {
         return "", err
@@ -197,5 +207,6 @@ func (a AnsibleRunner) CreateEphemeralInventory(hosts []*inventory.Host, executi
 }
 
 func (a AnsibleRunner) removeEphemeralInventory(fileName string) error {
-	return os.Remove(fileName)
+	// return os.Remove(fileName)
+	return nil
 }
