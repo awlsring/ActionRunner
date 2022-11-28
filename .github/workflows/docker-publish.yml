@@ -12,6 +12,19 @@ jobs:
       -
         name: Checkout
         uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+      - 
+        name: Install dependencies
+        run: npm install @openapitools/openapi-generator-cli -g
+      - 
+        name: Alias openapi-generator
+        run: |
+          shopt -s expand_aliases
+          alias openapi-generator="openapi-generator-cli"
       - 
         name: Codegen
         run: make gen
