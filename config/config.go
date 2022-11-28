@@ -17,6 +17,7 @@ type DatabaseConfig struct {
 }
 
 type Config struct {
+	LogLevel string `mapstructure:"logLevel"`
 	Runner runner.Config `mapstructure:"runner"`
 	Database DatabaseConfig `mapstructure:"db"`
 	Api api.Config `mapstructure:"api"`
@@ -40,10 +41,20 @@ func LoadConfig() (Config, error) {
 		return Config{}, err
 	}
 
-	j, _ := json.Marshal(config)
-	log.Info("Loaded config: %v", string(j))
-
 	validateDbConfig(config.Database)
+
+	if config.Runner.User == "" {
+		config.Runner.User = "action-runner"
+	}
+	if config.LogLevel == "" {
+		config.LogLevel = "info"
+	}
+
+	j, err := json.Marshal(config)
+	if err != nil {
+		return Config{}, err
+	}
+	log.Info("Loaded config: %v", string(j))
 
 	return config, nil
 }

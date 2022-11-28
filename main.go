@@ -34,11 +34,15 @@ func getActions(path string) (*map[string]string, error) {
 }
 
 func main() {
-	log.SetLevel(log.DebugLevel)
 	cfg, err := config.LoadConfig()
 	if err != nil {
 		log.Fatalln(err)
 	}
+	level, err  := log.ParseLevel(cfg.LogLevel)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	log.SetLevel(level)
 	
 	a, err := getActions(cfg.Runner.PlaybookDir)
 	if err != nil {
