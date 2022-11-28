@@ -207,6 +207,5 @@ func (a AnsibleRunner) CreateEphemeralInventory(hosts []*inventory.Host, executi
 }
 
 func (a AnsibleRunner) removeEphemeralInventory(fileName string) error {
-	// return os.Remove(fileName)
-	return nil
+	return os.Remove(fileName)
 }
