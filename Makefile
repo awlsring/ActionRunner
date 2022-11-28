@@ -9,7 +9,7 @@ gen:
 	mkdir ./codegen/SurrealDBClient
 	cp -R tmp/SurrealDBClient ./codegen
 	cd tmp/ActionRunnerModel && gradle build
-	openapi-generator generate -i tmp/ActionRunnerModel/build/smithyprojections/ActionRunnerModel/open-api/openapi/ActionRunner.openapi.json -g go -o ./codegen/ActionRunnerGoClient --git-user-id awlsring --git-repo-id action-runner
+	openapi-generator-cli generate -i tmp/ActionRunnerModel/build/smithyprojections/ActionRunnerModel/open-api/openapi/ActionRunner.openapi.json -g go -o ./codegen/ActionRunnerGoClient --git-user-id awlsring --git-repo-id action-runner
 	rm -rf tmp
 	go mod tidy
 
